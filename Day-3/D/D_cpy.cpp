@@ -20,7 +20,6 @@ void debug_f(vector<vector<int>> f) {
 }
 
 int main() {
-    // double start = clock();
     ios::sync_with_stdio(false); cin.tie(NULL);
     if (getenv("LOCAL")) setIO();
     int n, W; cin >> n >> W;
@@ -40,31 +39,31 @@ int main() {
         f[i][w[i-1]] = c[i-1];
         for (int k = 0; k <= W; k++) {
             f[i][k] = f[i-1][k];
-            if (k - w[i-1] >= 0) {
+            if (k >= w[i-1]) {
                 f[i][k] = max(f[i-1][k], f[i-1][k-w[i-1]] + c[i-1]);
             }
         }
     }
 
-    // debug_f(f);
+    debug_f(f);
 
     int p = -1;
-    int ki = -1;
+    int curr_k = -1;
     for (int k = 0; k <= W; k++) {
         if (f[n][k] > p) {
             p = f[n][k];
-            ki = k;
+            curr_k = k;
         }
     }
 
     vector<int> ans;
-    for (int i = n; i > 0; i--) {
-        if (f[i-1][ki] == p) {
+    for (int i = n; i > 0 && p > 0; i--) {
+        if (f[i-1][curr_k] == p) {
             continue;
         } else {
             ans.push_back(i);
             p -= c[i-1];
-            ki -= w[i-1];
+            curr_k -= w[i-1];
         }
     }
 
@@ -74,8 +73,6 @@ int main() {
         cout << c << ' ';
     }
     cout << endl;
-
-    // cerr << ((double) clock() - start) / CLOCKS_PER_SEC << endl;
 
     return 0;
 }
